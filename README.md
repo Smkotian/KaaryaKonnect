@@ -50,7 +50,7 @@ and barrier-free for all workers—even those with low literacy, limited smartph
 
 ---
 
-Tech Stack
+### Tech Stack
 
 Backend: Python, Flask
 
