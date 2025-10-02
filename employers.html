@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KaaryaKonnect - Employer Portal</title>
+
+  <!-- Embedded CSS to match employer.css exactly -->
+  <style>
+    body {
+      background: linear-gradient(135deg, #FFF7D1 0%, #FFD09B 100%);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    .employer-dashboard {
+      max-width: 1000px;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .logo-large {
+      font-size: 2.5rem;
+      text-align: center;
+      color: #2C3E50;
+      margin-bottom: 0.3rem;
+    }
+
+    .tagline {
+      text-align: center;
+      color: #7F8C8D;
+      margin-bottom: 2rem;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .nav-tabs button {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tabs button.active {
+      background: #FFD09B;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Card sections */
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Job cards */
+    .job-card {
+      background: #FFECC8;
+      border-radius: 15px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Worker profiles */
+    .profile-card {
+      background: #FFF7D1;
+      border-radius: 15px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Ratings */
+    .rating-card {
+      background: #FFECC8;
+      padding: 1rem;
+      border-radius: 15px;
+    }
+
+    .rating-card textarea {
+      width: 100%;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    /* Analytics */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .analytic-card {
+      background: #FFF7D1;
+      padding: 1.2rem;
+      border-radius: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: #FFD09B;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: #FFECC8;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    .btn-danger {
+      background: #FF6B6B;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      padding-top: 80px;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background: #ffffff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 20px;
+      width: 400px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #2c3e50;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #FFD09B;
+      box-shadow: 0 0 4px rgba(255,208,155,0.6);
+    }
+
+    /* Success message */
+    .success-box {
+      margin-top: 15px;
+      padding: 12px;
+      background: #e8f8f0;
+      color: #2d8659;
+      border: 1px solid #2d8659;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+  <!-- Firebase SDKs - Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+</head>
+
+<body>
+  <div class="employer-dashboard">
+    <!-- Header -->
+    <header>
+      <h1 class="logo-large">KaaryaKonnect</h1>
+      <p class="tagline">ಕಾರ್ಯ ಕನೆಕ್ಟ್ - Employer Portal</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+      <button class="active" data-tab="job-listings">Job Listings</button>
+      <button data-tab="worker-profiles">Worker Profiles</button>
+      <button data-tab="ratings">Ratings</button>
+      <button data-tab="analytics">Analytics</button>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+      <!-- Job Listings -->
+      <section class="card" id="job-listings">
+        <div class="section-header">
+          <h2>📋 Job Listings</h2>
+          <button class="btn-primary" id="newJobBtn">+ New Job</button>
+        </div>
+        <div class="job-list"></div>
+      </section>
+
+      <!-- Worker Profiles -->
+      <section class="card" id="worker-profiles" style="display:none;">
+        <div class="section-header">
+          <h2>👷 Worker Profiles</h2>
+          <input type="text" placeholder="Search by skill, name, location..." />
+        </div>
+        <div class="profile-list"></div>
+      </section>
+
+      <!-- Ratings -->
+      <section class="card" id="ratings" style="display:none;">
+        <h2>⭐ Rate Workers</h2>
+        <div class="rating-card">
+          <h3>Suresh (Painter)</h3>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <textarea placeholder="Leave feedback..."></textarea>
+          <button class="btn-primary">Submit</button>
+        </div>
+      </section>
+
+      <!-- Analytics -->
+      <section class="card" id="analytics" style="display:none;">
+        <h2>📊 Analytics</h2>
+        <div class="analytics-grid">
+          <div class="analytic-card" id="jobsPosted">Total Jobs: 0</div>
+          <div class="analytic-card" id="workersHired">Workers Hired: 0</div>
+          <div class="analytic-card" id="avgRating">Avg Rating: ⭐⭐⭐⭐☆</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Job Modal -->
+  <div id="jobModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add Job Listing</h2>
+      <form id="jobForm">
+        <div class="form-group">
+          <label for="jobTitle">Job Title</label>
+          <input type="text" id="jobTitle" required />
+        </div>
+        <div class="form-group">
+          <label for="jobLocation">Location</label>
+          <input type="text" id="jobLocation" required />
+        </div>
+        <div class="form-group">
+          <label for="jobPay">Pay</label>
+          <input type="text" id="jobPay" required />
+        </div>
+        <button type="submit" class="btn-primary">+ Add Job</button>
+      </form>
+      <div id="successMessage" class="success-box" style="display:none;">
+        ✅ Job added successfully!
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // RTDB Imports
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import {
+      getDatabase,
+      ref,
+      push,
+      set,
+      onValue,
+      remove,
+      update,
+    } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
+
+    // Standard Web Client Firebase Config
+    // NOTE: Please replace these placeholder values with YOUR actual web client credentials from the Firebase Console!
+    const firebaseConfig = {
+      apiKey: 'AIzaSyDXzcIg1-iZ-SkuXuDReTiCBGoMfp_WEDo',
+      authDomain: 'kaaryakonnect-d0fa8.firebaseapp.com',
+      databaseURL: 'https://kaaryakonnect-d0fa8-default-rtdb.firebaseio.com',
+      projectId: 'kaaryakonnect-d0fa8',
+      storageBucket: 'kaaryakonnect-d0fa8.firebasestorage.app',
+      messagingSenderId: '517233214529',
+      appId: '1:517233214529:web:d2b34592d67ef52b53b2c0',
+      measurementId: 'G-4NVWH92475',
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Tabs
+    const tabs = document.querySelectorAll('.nav-tabs button');
+    const sections = document.querySelectorAll('main section');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        sections.forEach((sec) => (sec.style.display = 'none'));
+        document.getElementById(tab.dataset.tab).style.display = 'block';
+      });
+    });
+
+    // Modal Logic
+    const modal = document.getElementById('jobModal');
+    const newJobBtn = document.getElementById('newJobBtn');
+    const closeBtn = document.querySelector('.close');
+    newJobBtn.onclick = () => (modal.style.display = 'block');
+    closeBtn.onclick = () => (modal.style.display = 'none');
+    window.onclick = (e) => {
+      if (e.target == modal) modal.style.display = 'none';
+    };
+
+    // Job Form Submission (CREATE - RTDB)
+    const jobForm = document.getElementById('jobForm');
+    const successBox = document.getElementById('successMessage');
+    jobForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('jobTitle').value.trim();
+      const location = document.getElementById('jobLocation').value.trim();
+      const pay = document.getElementById('jobPay').value.trim();
+
+      // RTDB: Push a new job object to the 'jobs' node
+      const jobsRef = ref(db, 'jobs');
+      const newJobRef = push(jobsRef);
+      await set(newJobRef, {
+        title,
+        location,
+        pay,
+        createdAt: Date.now(),
+      });
+
+      successBox.style.display = 'block';
+      setTimeout(() => {
+        successBox.style.display = 'none';
+      }, 3000);
+      jobForm.reset();
+      modal.style.display = 'none';
+    });
+
+    // Job Listings (READ - RTDB)
+    const jobListDiv = document.querySelector('.job-list');
+    const jobsRef = ref(db, 'jobs');
+
+    // RTDB: onValue listener for real-time updates
+    onValue(jobsRef, (snapshot) => {
+      jobListDiv.innerHTML = '';
+      let jobCount = 0;
+
+      // RTDB: snapshot.forEach iterates over the children (job entries)
+      snapshot.forEach((childSnapshot) => {
+        jobCount++;
+        const job = childSnapshot.val(); // Get the job data object
+        const jobId = childSnapshot.key; // Get the unique ID (key)
+
+        const card = document.createElement('div');
+        card.className = 'job-card';
+        card.innerHTML = `
+          <h3>${job.title}</h3>
+          <p><strong>Location:</strong> ${job.location}</p>
+          <p><strong>Pay:</strong> ${job.pay}</p>
+          <div class="actions">
+            <button class="btn-secondary edit-btn" data-id="${jobId}">Edit</button>
+            <button class="btn-danger delete-btn" data-id="${jobId}">Delete</button>
+          </div>
+        `;
+        jobListDiv.appendChild(card);
+      });
+      document.getElementById('jobsPosted').textContent = `Total Jobs: ${jobCount}`;
+    });
+
+    // Edit/Delete Delegation
+    jobListDiv.addEventListener('click', async (e) => {
+      const id = e.target.dataset.id;
+
+      // Delete Job (DELETE - RTDB) - NOTE: Removed 'confirm()' dialog
+      if (e.target.classList.contains('delete-btn')) {
+        await remove(ref(db, `jobs/${id}`));
+        // Optionally show a non-blocking message for confirmation
+        console.log(`Job ${id} deleted.`);
+      }
+
+      // Edit Job (UPDATE - RTDB) - NOTE: Replaced 'prompt()' with non-blocking warning
+      if (e.target.classList.contains('edit-btn')) {
+        // Since we cannot use prompt(), we must notify the user.
+        console.warn(
+          `Edit functionality for job ID: ${id} requires a custom modal UI. Please build a custom form or edit directly in the Firebase console.`
+        );
+      }
+    });
+  </script>
+</body>
+</html>
